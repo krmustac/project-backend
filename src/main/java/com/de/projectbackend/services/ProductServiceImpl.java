@@ -49,13 +49,12 @@ public class ProductServiceImpl implements ProductService {
         return product;
     }
 
-    public Product createProductSafe(Product product) {
+    public Product createProductPrepStatement(Product product) {
         final HashMap<String,Object> paramMap = new HashMap<>();
         paramMap.put("productName",product.getProductName());
         paramMap.put("amount",product.getAmount());
         paramMap.put("supplier",product.getSupplier());
         paramMap.put("contact",product.getContact());
-
 
         final String sql = """
                 INSERT INTO products (
@@ -75,7 +74,7 @@ public class ProductServiceImpl implements ProductService {
     }
 
 
-    public List<Product> getAllProductsSafe() {
+    public List<Product> getAllProductsPrepStatement() {
         final HashMap<String,Object> paramMap = new HashMap<>();
         final String sql = """
                 SELECT * FROM products
@@ -109,7 +108,7 @@ public class ProductServiceImpl implements ProductService {
         return true;
     }
 
-    public boolean deleteProductSafe(Integer id) {
+    public boolean deleteProductPrepStatement(Integer id) {
         final HashMap<String,Object> paramMap = new HashMap<>();
         paramMap.put("id",id);
 
@@ -129,7 +128,7 @@ public class ProductServiceImpl implements ProductService {
         return product;
     }
 
-    public Product getProductByIdSafe(Integer id) {
+    public Product getProductByIdPrepStatement(Integer id) {
         final HashMap<String,Object> paramMap = new HashMap<>();
         paramMap.put("id",id);
         final String sql = """
@@ -152,7 +151,7 @@ public class ProductServiceImpl implements ProductService {
         return product;
     }
 
-    public Product updateProductSafe(Integer id, Product product) {
+    public Product updateProductPrepStatement(Integer id, Product product) {
         final HashMap<String,Object> paramMap = new HashMap<>();
         paramMap.put("id",id);
         paramMap.put("productName",product.getProductName());
@@ -173,5 +172,11 @@ public class ProductServiceImpl implements ProductService {
         boolean updated = jdbcTemplate.update(sql,paramMap) > 0;
 
         return updated ? product : null;
+    }
+
+    public Integer getExampleProcedureCall(String productName) {
+        Integer count = productRepository.GET_TOTAL_PRODUCTS_BY_NAME(productName);
+
+        return count;
     }
 }

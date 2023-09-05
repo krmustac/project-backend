@@ -5,6 +5,7 @@ import com.de.projectbackend.services.ProductService;
 import com.de.projectbackend.services.ProductServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -24,19 +25,18 @@ public class ProductController {
 
     @PostMapping("/products")
     public Product createProduct(@RequestBody @Valid Product product){
-
-        return productService.createProductSafe(product);
+        return productService.createProduct(product);
     }
 
     @GetMapping("/products")
     public List<Product> getAllProducts(){
-        return productService.getAllProductsSafe();
+        return productService.getAllProducts();
     }
 
     @DeleteMapping("/products/{id}")
     public ResponseEntity<Map<String,Boolean>> deleteProduct(@PathVariable Integer id){
         boolean deleted = false;
-        deleted = productService.deleteProductSafe(id);
+        deleted = productService.deleteProduct(id);
         Map<String,Boolean> response = new HashMap<>();
         response.put("deleted",deleted);
         return ResponseEntity.ok(response);
@@ -45,13 +45,19 @@ public class ProductController {
     @GetMapping("/products/{id}")
     public ResponseEntity<Product> getProductById(@PathVariable Integer id){
         Product product = null;
-        product = productService.getProductByIdSafe(id);
+        product = productService.getProductById(id);
         return ResponseEntity.ok(product);
     }
 
     @PutMapping("/products/{id}")
     public ResponseEntity<Product> updateProduct(@PathVariable Integer id, @RequestBody @Valid Product product){
-        product = productService.updateProductSafe(id,product);
+        product = productService.updateProduct(id,product);
         return ResponseEntity.ok(product);
+    }
+
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @PostMapping("/products/procedure")
+    public Integer exampleProcedureCall(@RequestBody String productName){
+        return productService.getExampleProcedureCall(productName);
     }
 }
