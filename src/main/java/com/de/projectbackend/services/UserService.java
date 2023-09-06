@@ -8,13 +8,13 @@ public interface UserService {
 
     User createUser(User user) throws Exception;
 
-    List<User> getAllUsers();
+    List<User> getAllUsers() throws Exception;
 
-    boolean deleteUser(Integer id);
+    boolean deleteUser(Integer id) throws Exception;
 
-    User getUserById(Integer id);
+    User getUserById(Integer id) throws Exception;
 
-    boolean updateUser(Integer id, User user);
+    boolean updateUser(Integer id, User user) throws Exception;
 
     User loginUser(User login) throws Exception;
 }

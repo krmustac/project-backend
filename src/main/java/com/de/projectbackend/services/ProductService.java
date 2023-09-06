@@ -6,13 +6,13 @@ import java.util.List;
 
 public interface ProductService {
 
-    Product createProduct(Product product);
+    Product createProduct(Product product) throws Exception;
 
-    List<Product> getAllProducts();
+    List<Product> getAllProducts() throws Exception;
 
-    boolean deleteProduct(Integer id);
+    boolean deleteProduct(Integer id) throws Exception;
 
-    Product getProductById(Integer id);
+    Product getProductById(Integer id) throws Exception;
 
-    Product updateProduct(Integer id, Product product);
+    Product updateProduct(Integer id, Product product) throws Exception;
 }

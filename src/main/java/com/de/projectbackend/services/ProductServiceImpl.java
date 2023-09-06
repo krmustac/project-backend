@@ -40,23 +40,28 @@ public class ProductServiceImpl implements ProductService {
         });
     }
     @Override
-    public Product createProduct(Product product) {
-        ProductEntity productEntity = new ProductEntity();
+    public Product createProduct(Product product) throws Exception {
+        try {
+            ProductEntity productEntity = new ProductEntity();
 
-        BeanUtils.copyProperties(product,productEntity);
-        productRepository.save(productEntity);
+            BeanUtils.copyProperties(product, productEntity);
+            productRepository.save(productEntity);
 
-        return product;
+            return product;
+        }catch (Exception exception){
+            throw new Exception("Something went wrong ensure all data is correct");
+        }
     }
 
-    public Product createProductPrepStatement(Product product) {
-        final HashMap<String,Object> paramMap = new HashMap<>();
-        paramMap.put("productName",product.getProductName());
-        paramMap.put("amount",product.getAmount());
-        paramMap.put("supplier",product.getSupplier());
-        paramMap.put("contact",product.getContact());
+    public Product createProductPrepStatement(Product product) throws Exception {
+        try {
+            final HashMap<String, Object> paramMap = new HashMap<>();
+            paramMap.put("productName", product.getProductName());
+            paramMap.put("amount", product.getAmount());
+            paramMap.put("supplier", product.getSupplier());
+            paramMap.put("contact", product.getContact());
 
-        final String sql = """
+            final String sql = """
                 INSERT INTO products (
                 product_name,
                 amount,
@@ -68,98 +73,127 @@ public class ProductServiceImpl implements ProductService {
                 :supplier,
                 :contact)
                 """;
-
         boolean created = jdbcTemplate.update(sql,paramMap)>0;
         return created ? product : null;
+        }catch (Exception exception){
+            throw new Exception("Something went wrong ensure all data is correct");
+        }
     }
 
 
-    public List<Product> getAllProductsPrepStatement() {
-        final HashMap<String,Object> paramMap = new HashMap<>();
-        final String sql = """
+    public List<Product> getAllProductsPrepStatement() throws Exception {
+        try {
+            final HashMap<String, Object> paramMap = new HashMap<>();
+            final String sql = """
                 SELECT * FROM products
                 """;
-
         List<Product> products = jdbcTemplate.query(sql,paramMap,getProductRowMapper());
 
         return products;
+        }catch (Exception exception){
+            throw new Exception("Something went wrong ensure all data is correct");
+        }
     }
 
     @Override
-    public List<Product> getAllProducts() {
-        List<ProductEntity> productEntities = productRepository.findAll();
+    public List<Product> getAllProducts() throws Exception {
+        try {
+            List<ProductEntity> productEntities = productRepository.findAll();
 
-        List<Product> products = productEntities.stream()
-                .map(prod -> new Product(
-                        prod.getId(),
-                        prod.getProductName(),
-                        prod.getAmount(),
-                        prod.getSupplier(),
-                        prod.getContact()))
-                .collect(Collectors.toList());
-
-        return products;
+            List<Product> products = productEntities.stream()
+                    .map(prod -> new Product(
+                            prod.getId(),
+                            prod.getProductName(),
+                            prod.getAmount(),
+                            prod.getSupplier(),
+                            prod.getContact()))
+                    .collect(Collectors.toList());
+            return products;
+        }catch (Exception exception){
+            throw new Exception("Something went wrong ensure all data is correct");
+        }
     }
 
     @Override
-    public boolean deleteProduct(Integer id) {
-        ProductEntity product = productRepository.findById(id).get();
-        productRepository.delete(product);
-        return true;
+    public boolean deleteProduct(Integer id) throws Exception {
+        try {
+            ProductEntity product = productRepository.findById(id).get();
+            productRepository.delete(product);
+            return true;
+        }catch (Exception exception){
+            throw new Exception("Something went wrong ensure all data is correct");
+        }
     }
 
-    public boolean deleteProductPrepStatement(Integer id) {
-        final HashMap<String,Object> paramMap = new HashMap<>();
-        paramMap.put("id",id);
+    public boolean deleteProductPrepStatement(Integer id) throws Exception {
+        try {
+            final HashMap<String, Object> paramMap = new HashMap<>();
+            paramMap.put("id", id);
 
-        final String sql = """
+            final String sql = """
                 DELETE FROM products WHERE id = :id
                 """;
 
         return jdbcTemplate.update(sql,paramMap) > 0;
+        }catch (Exception exception){
+            throw new Exception("Something went wrong ensure all data is correct");
+        }
     }
 
     @Override
-    public Product getProductById(Integer id) {
-        ProductEntity productEntity = productRepository.findById(id).get();
-        Product product = new Product();
-        BeanUtils.copyProperties(productEntity,product);
+    public Product getProductById(Integer id) throws Exception {
+        try {
+            ProductEntity productEntity = productRepository.findById(id).get();
+            Product product = new Product();
+            BeanUtils.copyProperties(productEntity, product);
 
-        return product;
+            return product;
+        }catch (Exception exception){
+            throw new Exception("Something went wrong ensure all data is correct");
+        }
     }
 
-    public Product getProductByIdPrepStatement(Integer id) {
-        final HashMap<String,Object> paramMap = new HashMap<>();
-        paramMap.put("id",id);
-        final String sql = """
+    public Product getProductByIdPrepStatement(Integer id) throws Exception {
+        try {
+            final HashMap<String, Object> paramMap = new HashMap<>();
+            paramMap.put("id", id);
+            final String sql = """
                 SELECT * FROM products WHERE id = :id
                 """;
 
         List<Product> products = jdbcTemplate.query(sql,paramMap,getProductRowMapper());
         return products.size() > 0 ? products.get(0) : null;
+        }catch (Exception exception){
+            throw new Exception("Something went wrong ensure all data is correct");
+        }
     }
 
     @Override
-    public Product updateProduct(Integer id, Product product) {
-        ProductEntity productEntity = productRepository.findById(id).get();
-        productEntity.setProductName(product.getProductName());
-        productEntity.setAmount(product.getAmount());
-        productEntity.setSupplier(product.getSupplier());
-        productEntity.setContact(product.getContact());
-        productRepository.save(productEntity);
+    public Product updateProduct(Integer id, Product product) throws Exception {
+        try {
+            ProductEntity productEntity = productRepository.findById(id).get();
+            productEntity.setProductName(product.getProductName());
+            productEntity.setAmount(product.getAmount());
+            productEntity.setSupplier(product.getSupplier());
+            productEntity.setContact(product.getContact());
+            productRepository.save(productEntity);
 
-        return product;
+            return product;
+        }catch (Exception exception){
+            throw new Exception("Something went wrong ensure all data is correct");
+        }
     }
 
-    public Product updateProductPrepStatement(Integer id, Product product) {
-        final HashMap<String,Object> paramMap = new HashMap<>();
-        paramMap.put("id",id);
-        paramMap.put("productName",product.getProductName());
-        paramMap.put("amount",product.getAmount());
-        paramMap.put("supplier",product.getSupplier());
-        paramMap.put("contact",product.getContact());
+    public Product updateProductPrepStatement(Integer id, Product product) throws Exception {
+        try {
+            final HashMap<String, Object> paramMap = new HashMap<>();
+            paramMap.put("id", id);
+            paramMap.put("productName", product.getProductName());
+            paramMap.put("amount", product.getAmount());
+            paramMap.put("supplier", product.getSupplier());
+            paramMap.put("contact", product.getContact());
 
-        final String sql = """
+            final String sql = """
                 UPDATE products
                 SET
                 product_name = :productName,
@@ -172,11 +206,17 @@ public class ProductServiceImpl implements ProductService {
         boolean updated = jdbcTemplate.update(sql,paramMap) > 0;
 
         return updated ? product : null;
+        }catch (Exception exception){
+            throw new Exception("Something went wrong ensure all data is correct");
+        }
     }
 
-    public Integer getExampleProcedureCall(String productName) {
-        Integer count = productRepository.GET_TOTAL_PRODUCTS_BY_NAME(productName);
-
-        return count;
+    public Integer getExampleProcedureCall(String productName) throws Exception {
+        try {
+            Integer count = productRepository.GET_TOTAL_PRODUCTS_BY_NAME(productName);
+            return count;
+        }catch (Exception exception){
+            throw new Exception("Something went wrong ensure all data is correct");
+        }
     }
 }

@@ -41,12 +41,13 @@ public class UserServiceImpl implements UserService {
     @Override
     public User createUser(User user) throws Exception {
 
-        final HashMap<String,Object> paramMap = new HashMap<>();
-        paramMap.put("username",user.getUsername());
-        paramMap.put("password",passwordEncoder.encode(user.getPassword()));
+        try {
+            final HashMap<String, Object> paramMap = new HashMap<>();
+            paramMap.put("username", user.getUsername());
+            paramMap.put("password", passwordEncoder.encode(user.getPassword()));
 
-        boolean existingUser = getUserByUsername(user.getUsername())!=null;
-        final String sql = """
+            boolean existingUser = getUserByUsername(user.getUsername()) != null;
+            final String sql = """
                 INSERT INTO users (
                 username,
                 password,
@@ -67,61 +68,81 @@ public class UserServiceImpl implements UserService {
             return result;
         }
         return null;
+        }catch (Exception exception){
+            throw new Exception("Something went wrong ensure all data is correct");
+        }
     }
 
     @Override
-    public List<User> getAllUsers() {
-        final HashMap<String,Object> paramMap = new HashMap<>();
-        final String sql = """
+    public List<User> getAllUsers() throws Exception {
+        try {
+            final HashMap<String, Object> paramMap = new HashMap<>();
+            final String sql = """
                 SELECT * FROM users
                 """;
 
         return jdbcTemplate.query(sql,paramMap,getUserRowMapper());
+        } catch (Exception exception){
+            throw new Exception("Something went wrong ensure all data is correct");
+        }
     }
 
     @Override
-    public boolean deleteUser(Integer id) {
-        final HashMap<String,Object> paramMap = new HashMap<>();
-        paramMap.put("id",id);
+    public boolean deleteUser(Integer id) throws Exception {
+        try {
+            final HashMap<String, Object> paramMap = new HashMap<>();
+            paramMap.put("id", id);
 
-        final String sql = """
+            final String sql = """
                 DELETE FROM users WHERE id = :id
                 """;
 
         return jdbcTemplate.update(sql,paramMap) > 0;
+        }catch (Exception exception){
+            throw new Exception("Something went wrong ensure all data is correct");
+        }
     }
 
     @Override
-    public User getUserById(Integer id) {
-        final HashMap<String,Object> paramMap = new HashMap<>();
-        paramMap.put("id",id);
-        final String sql = """
+    public User getUserById(Integer id) throws Exception {
+        try {
+            final HashMap<String, Object> paramMap = new HashMap<>();
+            paramMap.put("id", id);
+            final String sql = """
                 SELECT * FROM users WHERE id = :id
                 """;
 
         List<User> users = jdbcTemplate.query(sql,paramMap,getUserRowMapper());
         return users.size() > 0 ? users.get(0) : null;
+        }catch (Exception exception){
+            throw new Exception("Something went wrong ensure all data is correct");
+        }
     }
 
 
-    public User getUserByUsername(String username) {
-        final HashMap<String,Object> paramMap = new HashMap<>();
-        paramMap.put("username",username);
-        final String sql = """
+    public User getUserByUsername(String username) throws Exception {
+        try {
+            final HashMap<String, Object> paramMap = new HashMap<>();
+            paramMap.put("username", username);
+            final String sql = """
                 SELECT * FROM users WHERE username = :username
                 """;
 
         List<User> users = jdbcTemplate.query(sql,paramMap,getUserRowMapper());
         return users.size() > 0 ? users.get(0) : null;
+        }catch (Exception exception){
+            throw new Exception("Something went wrong ensure all data is correct");
+        }
     }
 
     @Override
-    public boolean updateUser(Integer id, User user) {
-        final HashMap<String,Object> paramMap = new HashMap<>();
-        paramMap.put("id",id);
-        paramMap.put("roleId",user.getRoleId());
+    public boolean updateUser(Integer id, User user) throws Exception {
+        try {
+            final HashMap<String, Object> paramMap = new HashMap<>();
+            paramMap.put("id", id);
+            paramMap.put("roleId", user.getRoleId());
 
-        final String sql = """
+            final String sql = """
                 UPDATE users
                 SET
                 roleId = :roleId
@@ -129,6 +150,9 @@ public class UserServiceImpl implements UserService {
                 """;
 
         return jdbcTemplate.update(sql,paramMap) > 0;
+        }catch (Exception exception){
+            throw new Exception("Something went wrong ensure all data is correct");
+        }
     }
 
     @Override

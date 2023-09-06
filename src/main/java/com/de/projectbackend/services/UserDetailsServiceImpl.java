@@ -23,7 +23,12 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 
         User user = new User();
         user.setUsername(username);
-        final User verifiedUserByUsername = userService.getUserByUsername(user.getUsername());
+        final User verifiedUserByUsername;
+        try {
+            verifiedUserByUsername = userService.getUserByUsername(user.getUsername());
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
         if(verifiedUserByUsername != null && verifiedUserByUsername.getId() == null){
             return null;
         }

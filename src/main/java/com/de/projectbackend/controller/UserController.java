@@ -8,7 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import java.net.URI;
+import javax.validation.constraints.PositiveOrZero;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -35,12 +35,13 @@ public class UserController {
     }
 
     @GetMapping("/users")
-    public List<User> getAllUsers(){
+    public List<User> getAllUsers() throws Exception {
         return userService.getAllUsers();
     }
 
     @DeleteMapping("/users/{id}")
-    public ResponseEntity<Map<String,Boolean>> deleteUser(@PathVariable Integer id){
+    public ResponseEntity<Map<String,Boolean>> deleteUser(@PathVariable @PositiveOrZero Integer id)
+            throws Exception {
         boolean deleted = false;
         deleted = userService.deleteUser(id);
         Map<String,Boolean> response = new HashMap<>();
@@ -49,14 +50,14 @@ public class UserController {
     }
 
     @GetMapping("/users/{id}")
-    public ResponseEntity<User> getUserById(@PathVariable Integer id){
+    public ResponseEntity<User> getUserById(@PathVariable @PositiveOrZero Integer id) throws Exception {
         User user = null;
         user = userService.getUserById(id);
         return ResponseEntity.ok(user);
     }
 
     @PutMapping("/users/{id}")
-    public boolean updateUser(@PathVariable Integer id, @RequestBody @Valid User user){
+    public boolean updateUser(@PathVariable Integer id, @RequestBody @Valid User user) throws Exception {
         userService.updateUser(id,user);
         return userService.updateUser(id,user);
     }
@@ -66,7 +67,6 @@ public class UserController {
         User user= userService.loginUser(login);
         user.setToken(userAuthProvider.createToken(user.getUsername()));
         return ResponseEntity.ok(user);
-
     }
 
 }
